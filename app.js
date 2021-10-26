@@ -103,6 +103,14 @@ app.get('/readCookies', (req,res) => {
     res.send(`Hello ${cookies[0][1]} ${cookies[1][1]}! Welcome to the best site ever!!!!`);
   })
 
+  //todo: Delete all cookie.
+// app.delete('/clearCookies', (req, response) => {
+//     response.clearCookie(req.cookies)
+//     response.end();
+// });
+
+// res.cookie('name', 'tobi', { path: '/admin' })
+// res.clearCookie('name', { path: '/admin' })
 
 const port = 3000;
 app.listen(port, () =>
