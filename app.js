@@ -1,18 +1,22 @@
 const express = require('express');
-//const cors =require('cors');
 const movies = require('./movies.json');
 const app = require('express')();
-//const { uniqueId } = require("lodash");
 
+//const { uniqueId } = require("lodash");
 
 //Other middleware
 const morgan = require('morgan');
 app.use(morgan('dev'));
 
-//app.use(cors);
 app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
+//cookieParser
+// const cookieParser = require('cookie-parser')
+// app.use(cookieParser())
+
+
+//root
 app.get('/', (req, res)=>{
     res.status(200).send('Come Checkout our Movies');
     res.end();
@@ -62,42 +66,46 @@ app.get('/movies/:moviesId', (req, res) => {
 });
 
  //add movie to the list
- app.post('/movies', (req,res)=>{
-    // let {title, runtime, release_year, director} =req.body;
-
-    // let newMovie = {title, runtime, release_year, director};
-    // console.log('newMovie is:', newMovie);
-   
-    // const newId = uniqueId();
-    // console.log('newId is', newId);
-    // newMovie.id = newId;
-    // movies.push(newMovie);
-    // res.status(200).send(movies)
+app.post('/movies', (req,res)=>{
     let title =req.body.title;
     let runtime =req.body.runtime;
     let release_year =req.body.release_year;
     let director =req.body.director;
-    let newId = movies.length+1;
-
-    let newMovie = { newId, title, runtime, release_year, director};
+    let id = movies.length+1;
+    let newMovie = { id, title, runtime, release_year, director};
     movies.push(newMovie)
-    res.json(newMovie)
+    res.json(movies)   
+})
 
-        
- })
-
-// {
-//     "id": 4,
-//     "title": "Richy Rich",
-//     "runtime": 96,
-//     "release_year": 1994,
-//     "director": "Donald Petrie"
-// }
 
 //delete a movie
-// app.delete('/movies/{id}, (req, res) => {
-//     res.send("Movie has been deleted.")
-// })
+ app.delete('/movies/:movieId', (req, res) => {
+    const id = parseInt(req.params.movieId,10);
+    const movie = movies.find(movie => movie.id === id);
+    console.log('id is:', id)
+    console.log('movie is:', movie)
+    if (movie) {
+      movies.splice(movies.indexOf(movie), 1);
+    }else {
+       res.status(404).send('Movie not found');
+     }
+    res.send(movies);
+  });
+
+
+//  //todo: Return an array containing the cookies from the request. - hint: Object.entries may come in handy.
+// app.get('/api/cookies', (request, response) => {
+//     let cookies = Object.entries(request.cookies);
+//     console.log(cookies)
+//     response.json(cookies)
+// });
+
+// //todo: Create a cookie with a random value.
+// app.post('/api/cookies/random', (request, response) => {
+//     let randomValue = `totally random: ${Math.random()}`
+//     response.cookie('random', randomValue);
+//     response.end();
+// });
 
 
 const port = 3000;
