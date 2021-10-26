@@ -2,7 +2,6 @@ const express = require('express');
 const movies = require('./movies.json');
 const app = require('express')();
 
-//const { uniqueId } = require("lodash");
 
 //Other middleware
 const morgan = require('morgan');
@@ -12,8 +11,8 @@ app.use(express.json()); // for parsing application/json
 app.use(express.urlencoded({ extended: true }));
 
 //cookieParser
-// const cookieParser = require('cookie-parser')
-// app.use(cookieParser())
+ const cookieParser = require('cookie-parser')
+ app.use(cookieParser())
 
 
 //root
@@ -92,20 +91,17 @@ app.post('/movies', (req,res)=>{
     res.send(movies);
   });
 
+app.post('/setCookies', (req,res) => {
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  res.cookie("firstName", firstName)
+  res.cookie("lastName", lastName)
+})
 
-//  //todo: Return an array containing the cookies from the request. - hint: Object.entries may come in handy.
-// app.get('/api/cookies', (request, response) => {
-//     let cookies = Object.entries(request.cookies);
-//     console.log(cookies)
-//     response.json(cookies)
-// });
-
-// //todo: Create a cookie with a random value.
-// app.post('/api/cookies/random', (request, response) => {
-//     let randomValue = `totally random: ${Math.random()}`
-//     response.cookie('random', randomValue);
-//     response.end();
-// });
+app.get('/readCookies', (req,res) => {
+    let cookies = Object.entries(req.cookies);
+    res.send(`Hello ${cookies[0][1]} ${cookies[1][1]}! Welcome to the best site ever!!!!`);
+  })
 
 
 const port = 3000;
